@@ -17,8 +17,7 @@
   },
   "scripts": {
     "test": "vitest",
-    "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:run": "vitest run"
   },
   "keywords": [
     "hash",
