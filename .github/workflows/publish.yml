@@ -24,27 +24,32 @@ jobs:
 
     - name: Run tests
       run: npm run test:run
-
-    - name: Check NPM token
+        
+    - name: Extract version from tag
+      id: version
       run: |
-        if [ -n "${{ secrets.NPM_TOKEN }}" ]; then
-          echo "NPM token is set"
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/}
+          VERSION=${VERSION#v}  # Remove 'v' prefix if present
         else
-          echo "NPM token is not set"
+          VERSION=$(node -p "require('./package.json').version")
+        fi
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Extracted version: $VERSION"
+        
+    - name: Verify version consistency
+      run: |
+        PACKAGE_VERSION=$(node -p "require('./package.json').version")
+        TAG_VERSION=${{ steps.version.outputs.version }}
+        echo "Package version: $PACKAGE_VERSION"
+        echo "Tag version: $TAG_VERSION"
+        if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
+          echo "❌ Version mismatch! Package version ($PACKAGE_VERSION) does not match tag version ($TAG_VERSION)"
           exit 1
         fi
-
+        echo "✅ Version consistency verified"
+        
     - name: Publish to npm
       run: npm publish
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-    - name: Create GitHub Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: false
