@@ -26,7 +26,13 @@ jobs:
       run: npm run test:run
 
     - name: Check NPM token
-      run: echo "NPM token is set: ${{ secrets.NPM_TOKEN != '' }}"
+      run: |
+        if [ -n "${{ secrets.NPM_TOKEN }}" ]; then
+          echo "NPM token is set"
+        else
+          echo "NPM token is not set"
+          exit 1
+        fi
 
     - name: Publish to npm
       run: npm publish
