@@ -1,0 +1,26 @@
+# Test files
+test/
+*.test.js
+*.spec.js
+
+# Development files
+vitest.config.js
+.vitest/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporary files
+test-temp/
+temp/
