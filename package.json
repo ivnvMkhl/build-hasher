@@ -1,6 +1,6 @@
 {
   "name": "build-hasher",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Library for hashing static assets and updating file references. Perfect for build tools, bundlers, and asset management.",
   "main": "src/index.js",
   "types": "src/index.d.ts",
